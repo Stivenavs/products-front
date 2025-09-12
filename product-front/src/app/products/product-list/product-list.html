@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <h2>Gestión de Productos</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <input type="text" [(ngModel)]="idProduct" placeholder="Buscar producto..." class="form-control w-50 me-2">
+    <button class="btn btn-primary" (click)="search()">Buscar</button>
+    <button class="btn btn-success" [routerLink]="['/products/new']">Nuevo Producto</button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Fecha creación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{product.id}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.description}}</td>
+        <td>{{product.price | currency}}</td>
+        <td>{{product.createdAt | date:'short'}}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" (click)="editProduct(product.id!)">Editar</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id!)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1">
+        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+
