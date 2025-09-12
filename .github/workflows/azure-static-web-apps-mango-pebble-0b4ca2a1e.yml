@@ -35,15 +35,22 @@ jobs:
         run: npm run build --if-present
         working-directory: ./products-front
 
-      # 5️⃣ Deploy a Azure Static Web Apps usando el dist generado
+      # 5️⃣ Detectar automáticamente la carpeta de salida de Angular
+      - name: Detect Angular output folder
+        id: detect-output
+        run: |
+          DIST_PATH=$(jq -r '.projects["product-front"].architect.build.options.outputPath' ./products-front/angular.json)
+          echo "DIST_PATH=$DIST_PATH" >> $GITHUB_ENV
+
+      # 6️⃣ Deploy a Azure Static Web Apps usando el dist generado
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_PEBBLE_0B4CA2A1E }}
           action: "upload"
-          app_location: "./products-front"           # carpeta Angular
-          output_location: "dist/products-front"     # carpeta generada tras build
-          skip_app_build: true                        # importante: no dejar que Oryx vuelva a compilar
+          app_location: "./products-front"
+          output_location: ${{ env.DIST_PATH }}
+          skip_app_build: false
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
