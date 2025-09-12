@@ -28,18 +28,18 @@ jobs:
       # 3️⃣ Instalar dependencias Angular
       - name: Install dependencies
         run: npm install
-        working-directory: ./products-front
+        working-directory: .
 
       # 4️⃣ Build Angular
       - name: Build Angular App
         run: npm run build --if-present
-        working-directory: ./products-front
+        working-directory: .
 
       # 5️⃣ Detectar automáticamente la carpeta de salida de Angular
       - name: Detect Angular output folder
         id: detect-output
         run: |
-          DIST_PATH=$(jq -r '.projects["product-front"].architect.build.options.outputPath' ./products-front/angular.json)
+          DIST_PATH=$(jq -r '.projects["product-front"].architect.build.options.outputPath' ./angular.json)
           echo "DIST_PATH=$DIST_PATH" >> $GITHUB_ENV
 
       # 6️⃣ Deploy a Azure Static Web Apps usando el dist generado
@@ -48,9 +48,9 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_PEBBLE_0B4CA2A1E }}
           action: "upload"
-          app_location: "./products-front"
+          app_location: "."           # proyecto Angular en la raíz
           output_location: ${{ env.DIST_PATH }}
-          skip_app_build: false
+          skip_app_build: true        # no dejar que Oryx vuelva a compilar
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
