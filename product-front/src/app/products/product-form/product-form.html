@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2>{{ isEdit ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+
+  <form (ngSubmit)="save()" #productForm="ngForm">
+    <div class="mb-3">
+      <label for="name" class="form-label">
+        Nombre <span class="text-danger"> * </span> 
+      </label>
+      <input id="name" name="name" class="form-control"
+             [(ngModel)]="product.name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción</label>
+      <input id="description" name="description" class="form-control"
+             [(ngModel)]="product.description">
+    </div>
+
+    <div class="mb-3">
+      <label for="price" class="form-label">Precio</label>
+      <input id="price" name="price" type="number" class="form-control"
+             [(ngModel)]="product.price" required min="0.01" step="0.01">
+    </div>
+
+    <button type="submit" class="btn btn-primary me-2">
+      {{ isEdit ? 'Actualizar' : 'Crear' }}
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+/* Estilos locales de la tabla */
+table {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+td, th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+button {
+  margin-right: 5px;
+}
