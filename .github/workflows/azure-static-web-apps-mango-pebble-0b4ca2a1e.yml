@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      # 2️⃣ Instalar Node 22
+      # 1️⃣ Checkout del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Instalar Node.js 22
       - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
@@ -24,22 +28,22 @@ jobs:
       # 3️⃣ Instalar dependencias Angular
       - name: Install dependencies
         run: npm install
-        working-directory: ./product-front
+        working-directory: ./products-front
 
       # 4️⃣ Build Angular
       - name: Build Angular App
         run: npm run build --if-present
-        working-directory: ./product-front
+        working-directory: ./products-front
 
-      # 5️⃣ Deploy a Azure Static Web Apps usando el dist ya generado
+      # 5️⃣ Deploy a Azure Static Web Apps usando el dist generado
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_PEBBLE_0B4CA2A1E }}
           action: "upload"
-          app_location: "./product-front"
-          output_location: "dist/products-front"
-          skip_app_build: true   # importante: NO dejar que Oryx haga build
+          app_location: "./products-front"           # carpeta Angular
+          output_location: "dist/products-front"     # carpeta generada tras build
+          skip_app_build: true                        # importante: no dejar que Oryx vuelva a compilar
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -50,4 +54,3 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "close"
-
