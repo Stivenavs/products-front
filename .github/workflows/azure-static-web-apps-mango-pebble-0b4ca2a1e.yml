@@ -17,18 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Instalar Node (ajusta la versión según tu proyecto, ej: 22 si es lo que usas)
+      # Instalar Node.js en versión compatible con Angular
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.12.0
 
       # Instalar dependencias
       - name: Install dependencies
         run: npm install
         working-directory: ./product-front
 
-      # Construir la app de Angular
+      # Construir la app Angular
       - name: Build Angular App
         run: npm run build --if-present
         working-directory: ./product-front
@@ -39,8 +39,8 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_PEBBLE_0B4CA2A1E }}
           action: "upload"
-          app_location: "./product-front"       # código fuente
-          output_location: "dist/products-front" # carpeta generada tras build
+          app_location: "./product-front"         # código fuente
+          output_location: "dist/products-front"  # carpeta generada tras build
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
