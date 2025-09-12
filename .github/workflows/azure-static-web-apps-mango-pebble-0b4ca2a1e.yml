@@ -15,25 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
+      # 1️⃣ Checkout del repo
       - uses: actions/checkout@v3
 
-      # Instalar Node.js versión compatible con Angular
-      - name: Set up Node.js
+      # 2️⃣ Forzar Node 22 en el runner (Oryx lo detectará)
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22.12.0
 
-      # Instalar dependencias Angular
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./product-front
+      # 3️⃣ (Opcional) Instalar dependencias localmente si quieres prebuild
+      # - name: Install dependencies
+      #   run: npm install
+      #   working-directory: ./product-front
 
-      # Construir Angular
-      - name: Build Angular App
-        run: npm run build --if-present
-        working-directory: ./product-front
-
-      # Desplegar usando el build generado
+      # 4️⃣ Deploy con Oryx compilando en Azure
       - name: Build And Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -41,7 +37,7 @@ jobs:
           action: "upload"
           app_location: "./product-front"
           output_location: "dist/products-front"
-          skip_app_build: true   # 🔥 evita que Oryx vuelva a compilar con Node 18
+          # NO skip_app_build, dejamos que Oryx compile usando Node 22
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
